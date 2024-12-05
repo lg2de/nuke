@@ -49,7 +49,7 @@ internal class HandlePlanRequestsAttribute : BuildExtensionAttributeBase, IOnBui
     }
 
     // ReSharper disable once CognitiveComplexity
-    private string GetGraphDefinition()
+    internal string GetGraphDefinition()
     {
         var builder = new StringBuilder();
         foreach (var executableTarget in Build.ExecutableTargets)
@@ -67,7 +67,8 @@ internal class HandlePlanRequestsAttribute : BuildExtensionAttributeBase, IOnBui
                         builder.AppendLine($"{executableTarget.Name} -.-> {dependency.Name}");
                     else if (dependency.TriggerDependencies.Contains(executableTarget))
                         builder.AppendLine($"{executableTarget.Name} ==> {dependency.Name}");
-                }
+                    else if (dependency.ArtifactDependencies.Contains(executableTarget))
+                        builder.AppendLine($"{executableTarget.Name} -.-> {dependency.Name}");}
             }
 
             if (executableTarget.Listed == false)
